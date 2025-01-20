@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% load custom_tags %}  
+
+{% block content %}
+<script src="{% static 'js/places-list_script.js' %}"></script>
+    <div class="places__banner">
+        <h1>Рестораны города</h1>
+        <i>
+            <svg width="130" height="130" viewBox="0 0 170 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16.2031 8.23438C11.6875 13.0156 2.3906 43.0312 41.4375 82.3437C53.9218 94.8281 63.2187 85.5312 70.9218 93.5L140.781 163.359C140.781 163.359 155.922 158.312 158.312 145.562L19.9218 6.90625C19.9218 6.90625 18.5937 5.84375 16.2031 8.23438Z" fill="#94989B"/>
+            <path d="M164.156 29.2187C166.015 25.7656 161.765 26.8281 161.765 26.8281C161.765 26.8281 133.609 53.9219 129.625 50.7344C125.64 47.5469 157.25 21.5156 153.531 16.4687C150.078 11.9531 122.453 44.3594 119 40.375C115.812 36.3906 142.64 8.23437 142.64 8.23437C142.64 8.23437 143.703 3.98437 140.25 5.84374C97.7498 28.6875 92.4373 49.9375 92.4373 49.9375C92.4373 49.9375 90.8436 54.1875 94.0311 57.375C94.2967 57.6406 16.4686 135.203 6.10921 145.562C1.06233 150.609 19.6561 168.937 24.703 163.891C35.0623 153.531 112.359 75.4375 112.625 75.7031C115.812 78.8906 120.062 77.5625 120.062 77.5625C120.062 77.5625 141.312 71.9844 164.156 29.2187Z" fill="#B2C1C0"/>
+            </svg>
+        </i>
+    </div>
+    <div class="places__content">
+        <button class="show__filters">Показать фильтры</button>
+        <div class="places__filters">
+            {% filters_sidebar filters %}
+        </div>
+        <div id="places-list" class="places__list">
+            {% for place in place_list %}
+                {% place_card place %}
+            {% endfor %}
+        </div>
+        <!-- <div class="places__list">
+            {% for place in place_list %}
+                {% place_card place %}
+            {% endfor %}
+        </div> -->
+    </div>
+    {% include 'includes/pagination.html' %}
+    
+{% endblock content %}

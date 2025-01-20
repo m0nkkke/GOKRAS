@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<script src="{% static 'js/eye_script.js' %}"></script>
+
+<div class="login__container">
+    <form method="post" class="login__inputs">
+        {% csrf_token %}
+        <h1> Регистрация </h1>
+
+        <!-- Имя -->
+        <div class="form-group">
+            {{ form.username }}
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+            {{ form.email }}
+        </div>
+
+        <!-- Телефон -->
+        <div class="form-group">
+            {{ form.phone }}
+        </div>
+        <!-- Поле для пола -->
+        <div class="form-group">
+            {{ form.gender.label_tag }}
+            {{ form.gender }}
+        </div>
+
+        <!-- Пароль -->
+        <div class="input__container">
+            {{ form.password1 }}
+            <svg id="togglePassword" width="37" height="42" viewBox="0 0 37 42" fill="none" xmlns="http://www.w3.org/2000/svg" style="cursor: pointer;">
+                <path d="M22.9492 21C22.9492 23.8996 20.9536 26.25 18.4917 26.25C16.0299 26.25 14.0342 23.8996 14.0342 21C14.0342 18.1004 16.0299 15.75 18.4917 15.75C20.9536 15.75 22.9492 18.1004 22.9492 21Z" 
+                    stroke="black" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18.4918 8.75C11.8386 8.75 6.20686 13.9 4.31348 21C6.20683 28.0999 11.8386 33.25 18.4918 33.25C25.1448 33.25 30.7766 28.0999 32.67 21C30.7766 13.9001 25.1448 8.75 18.4918 8.75Z" 
+                    stroke="black" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Повторите пароль -->
+        {% comment %} <div class="form-group">
+            {{ form.password2 }}
+        </div>
+         {% endcomment %}
+        
+        <!-- Повторите пароль -->
+        <div class="input__container">
+            {{ form.password2 }}
+            <svg id="togglePassword2" width="37" height="42" viewBox="0 0 37 42" fill="none" xmlns="http://www.w3.org/2000/svg" style="cursor: pointer;">
+                <path d="M22.9492 21C22.9492 23.8996 20.9536 26.25 18.4917 26.25C16.0299 26.25 14.0342 23.8996 14.0342 21C14.0342 18.1004 16.0299 15.75 18.4917 15.75C20.9536 15.75 22.9492 18.1004 22.9492 21Z" 
+                    stroke="black" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18.4918 8.75C11.8386 8.75 6.20686 13.9 4.31348 21C6.20683 28.0999 11.8386 33.25 18.4918 33.25C25.1448 33.25 30.7766 28.0999 32.67 21C30.7766 13.9001 25.1448 8.75 18.4918 8.75Z" 
+                    stroke="black" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+         
+
+
+
+        <!-- Кнопка регистрации -->
+        <button type="submit" class="lightgray__button">Зарегистрироваться</button>
+    </form>
+
+    <hr class="logdivider">
+
+    <div class="login__supports">
+        <h1> Личный кабинет </h1>
+        <p>Регистрация на нашем сайте позволяет получить доступ к добавлению маршрутов в избранное, доступ к отзывам и другое. Просто заполните поля ниже, и мы быстро создадим для вас новую учетную запись. Мы только попросим вас предоставить информацию, необходимую для процессов взаимодействия.</p>
+        <button class="lightgray__button" onclick="window.location.href='{% url 'login' %}'">Авторизация</button>
+    </div>
+</div>
+
+
+
+<!-- Это было до -->
+<!-- <div class="login__container">
+    <div class="login__inputs">
+        <h1> Регистрация </h1>
+        <input type="text" placeholder="Имя" class="user__input">
+        <input type="email" placeholder="E-mail" class="user__input">
+        <input type="tel" placeholder="Телефон" class="user__input">
+        <div class="input__container">
+            <input type="password" placeholder="Пароль" class="user__input" id="password">
+            <svg id="togglePassword" width="37" height="42" viewBox="0 0 37 42" fill="none" xmlns="http://www.w3.org/2000/svg" style="cursor: pointer;">
+                <path d="M22.9492 21C22.9492 23.8996 20.9536 26.25 18.4917 26.25C16.0299 26.25 14.0342 23.8996 14.0342 21C14.0342 18.1004 16.0299 15.75 18.4917 15.75C20.9536 15.75 22.9492 18.1004 22.9492 21Z" 
+                      stroke="black" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18.4918 8.75C11.8386 8.75 6.20686 13.9 4.31348 21C6.20683 28.0999 11.8386 33.25 18.4918 33.25C25.1448 33.25 30.7766 28.0999 32.67 21C30.7766 13.9001 25.1448 8.75 18.4918 8.75Z" 
+                      stroke="black" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <a> Забыли пароль? </a>
+        <button class="lightgray__button">Войти</button>
+    </div>
+
+    <hr class="divider">
+
+    <div class="login__supports">
+        <h1> Личный кабинет </h1>
+        <p>Регистрация на нашем сайте позволяет получить доступ к добавлению маршрутов в избранное, доступ к отзывам и другое. Просто заполните поля ниже, и мы быстро создадим для вас новую учетную запись. Мы только попросим вас предоставить информацию, необходимую для процессов взаимодействия.</p>
+        <button class="lightgray__button" onclick="window.location.href='{% url 'login' %}'">Авторизация</button>
+    </div>
+</div> -->
+
+{% endblock %}

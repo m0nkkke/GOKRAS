@@ -1,0 +1,99 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} GoKRAS {% endblock title %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Trip+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital@1&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="{% static 'images/logo.png' %}" />
+    <script src="{% static 'js/menu_script.js' %}"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <header class="base__header">
+            <a href="{% url 'route_main' %}">
+            <div class="logo">
+                GoKRAS
+                <div class="logo__geo">
+                    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="30" height="30" fill="#5E6977"/>
+                    <path d="M25.3125 3.4375H4.6875C4.35598 3.4375 4.03804 3.5692 3.80362 3.80362C3.5692 4.03804 3.4375 4.35598 3.4375 4.6875V25.3125C3.4375 25.644 3.5692 25.962 3.80362 26.1964C4.03804 26.4308 4.35598 26.5625 4.6875 26.5625H25.3125C25.644 26.5625 25.962 26.4308 26.1964 26.1964C26.4308 25.962 26.5625 25.644 26.5625 25.3125V4.6875C26.5625 4.35598 26.4308 4.03804 26.1964 3.80362C25.962 3.5692 25.644 3.4375 25.3125 3.4375Z" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M15.9867 22.589C15.961 19.596 16.6507 17.1225 20.4125 17.2778C25.7789 3.60176 3.89754 4.12308 9.73017 17.1961C11.4989 17.0864 14.4309 18.1394 13.9302 22.9127" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M26.5625 20.9244L3.4375 24.5641" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3.4375 6.89999L11.153 8.33124" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M20.2222 9.70624L26.5625 10.6321" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <p class="title__geo">Красноярск</p>
+                </div>
+            </div>
+            </a>
+            <button class="menu-toggle" aria-label="Toggle Menu">☰ Меню</button>
+            <div class="nav__buttons">
+                <nav class="nav__header">
+                    <ul><a href="{% url 'routes_list' %}">Маршруты</a></ul>
+                    <ul><a href="{% url 'parks_list' %}">Парки</a></ul>
+                    <ul><a href="{% url 'rests_list' %}">Досуг</a></ul>
+                    <ul><a href="{% url 'restaurants_list' %}">Рестораны</a></ul>
+                </nav>
+            </div>
+            <!-- Добавил проверку на авторизированного пользователя, тут кнопки подредачить надо -->
+            <div class="login__header">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'profile' %}">
+                        <span class="username">{{ request.user.username }}</span>
+                    </a>
+                    <div class="menu-container">
+                        <button class="menu-button" onclick="toggleMenu()">&#x22EE;</button>
+                        <div class="menu" id="menu">
+                            <a href="{% url 'logout' %}">Выйти</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="button__gray">Войти</a>
+                {% endif %}
+                
+                <!-- <button class="button__gray">Войти</button> -->
+            </div>
+        </header>
+        <main>
+            {% block content %}
+            {% endblock %}
+            </main>
+        <footer class="base__footer">
+            <div class="infblock__footer">
+                <h3 class="footer__title">О нас</h3>
+                <ul class="footer_info">О GoKRAS</ul>
+                <ul class="footer_info">Условия пользования</ul>
+            </div>
+            <div class="infblock__footer">
+                <h3 class="footer__title">Поддержка</h3>
+                <ul class="footer_info">Центр поддержки</ul>
+                <ul class="footer_info">Связь с нами</ul>
+            </div>
+            <div class="infblock__footer">
+                <h3 class="footer__title">Авторизация</h3>
+                <ul class="footer_info">Личный кабинет</ul>
+            </div>
+            <div class="infblock__footer">
+                <h3 class="footer__title">Соц. сети</h3>
+                <div class="svg__footer">
+                    <div class="vk">      
+                        <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M-2.3999 -1.6001V30.3999H29.6001V-1.6001H-2.3999ZM11.8052 6.95654C12.7112 6.94716 13.5974 7.04761 14.0298 7.06006C15.6324 7.1062 15.9155 7.91678 15.895 8.5835C15.865 9.55996 15.2368 13.6904 16.4009 14.0933C18.0971 13.1862 19.2346 10.369 20.063 8.5835C20.482 7.68036 20.4157 7.63548 21.3813 7.63428L25.2172 7.62841C26.141 7.62726 26.105 7.59486 26.4009 7.97217C27.0891 8.84972 24.229 12.5 23.3051 13.5093C21.6004 15.3719 22.595 16.0932 22.8696 16.3491C24.1419 17.5353 25.3712 18.7654 26.1352 19.8999C26.7427 20.8018 26.4918 21.6416 25.7192 21.6733L21.6059 21.8433C20.241 21.8994 18.1186 19.4525 17.7798 18.9194C17.5058 18.4797 16.1854 17.9286 16.061 19.0522L15.8872 20.6205C15.7609 21.7416 14.9332 21.7155 14.2798 21.7436C9.75527 21.9382 8.21445 20.2156 5.93599 17.6732C4.2661 15.3116 2.67252 12.9365 1.35202 10.0912C0.956765 9.23953 0.747404 8.61476 0.693805 7.95254C1.35823 7.43324 3.69042 7.65692 5.25631 7.62246C5.6846 7.61302 5.97359 7.85844 6.19967 8.34708C7.08183 10.2541 8.04391 12.1268 9.31687 13.7826C9.87124 14.2932 10.3613 14.481 10.6059 13.4428C10.748 13.4297 10.7366 11.7104 10.7446 10.4135C10.7501 9.52297 10.6455 8.45505 9.13719 7.9623C9.44228 7.1626 10.6403 6.96862 11.8052 6.95654Z" fill="white"/>
+                        </svg>
+                    </div>
+                    <div class="tg">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M30.8156 5.99274C31.2395 3.92638 29.2099 2.20919 27.2423 2.96942L3.12337 12.2881C0.926063 13.1371 0.828157 16.2097 2.96695 17.1968L8.21937 19.621L10.718 28.3662C10.8478 28.8205 11.2083 29.1722 11.6656 29.2908C12.1229 29.4092 12.6088 29.2769 12.9429 28.9428L16.7918 25.0938L22.1834 29.1376C23.7484 30.3113 26.0026 29.4564 26.3956 27.54L30.8156 5.99274ZM4.08444 14.7756L28.2034 5.45688L23.7834 27.0042L17.4667 22.2666C16.9359 21.8685 16.1931 21.9213 15.7239 22.3905L14.0754 24.039L14.5707 21.3149L24.2762 11.6095C24.7486 11.1371 24.7984 10.3882 24.393 9.85732C23.9875 9.32647 23.2519 9.17758 22.6719 9.50899L9.26836 17.1681L4.08444 14.7756ZM10.9026 19.3056L11.7111 22.1354L12.0216 20.4281C12.0701 20.1613 12.1988 19.9156 12.3906 19.7238L15.3504 16.7641L10.9026 19.3056Z" fill="white"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

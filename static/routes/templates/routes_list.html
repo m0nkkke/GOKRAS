@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="places__banner">
+    <h1>Маршруты</h1>
+    <i>
+        <svg width="130" height="130" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M68.55 38.0999C68.55 56.0249 39.9 83.0999 39.9 83.0999C39.9 83.0999 11.25 56.0249 11.25 38.0999C11.3663 34.4551 12.1998 30.869 13.7029 27.5466C15.206 24.2241 17.3493 21.2305 20.01 18.7369C22.6708 16.2433 25.797 14.2985 29.2099 13.0139C32.6227 11.7292 36.2553 11.1298 39.9 11.2499C43.5447 11.1298 47.1773 11.7292 50.5901 13.0139C54.003 14.2985 57.1292 16.2433 59.79 18.7369C62.4507 21.2305 64.594 24.2241 66.0971 27.5466C67.6002 30.869 68.4337 34.4551 68.55 38.0999Z" stroke="#B2C1C0" stroke-width="8" stroke-miterlimit="10"/>
+            <path d="M39.8999 47.0249C43.8349 47.0249 47.0249 43.8349 47.0249 39.8999C47.0249 35.9649 43.8349 32.7749 39.8999 32.7749C35.9649 32.7749 32.7749 35.9649 32.7749 39.8999C32.7749 43.8349 35.9649 47.0249 39.8999 47.0249Z" fill="#B2C1C0"/>
+            <path d="M168.75 109.65C168.75 127.575 140.1 154.65 140.1 154.65C140.1 154.65 111.45 127.8 111.45 109.65C111.705 102.302 114.864 95.3555 120.236 90.3355C125.608 85.3154 132.752 82.6322 140.1 82.875C147.448 82.6322 154.593 85.3154 159.964 90.3355C165.336 95.3555 168.496 102.302 168.75 109.65Z" stroke="#B2C1C0" stroke-width="8" stroke-miterlimit="10"/>
+            <path d="M140.1 118.575C144.035 118.575 147.225 115.385 147.225 111.45C147.225 107.515 144.035 104.325 140.1 104.325C136.165 104.325 132.975 107.515 132.975 111.45C132.975 115.385 136.165 118.575 140.1 118.575Z" fill="#B2C1C0"/>
+            <path d="M32.7 97.5H64.95C67.3039 97.5 69.6348 97.9636 71.8096 98.8645C73.9844 99.7653 75.9604 101.086 77.6249 102.75C79.2894 104.415 80.6097 106.391 81.5105 108.565C82.4114 110.74 82.875 113.071 82.875 115.425C82.875 117.779 82.4114 120.11 81.5105 122.285C80.6097 124.459 79.2894 126.435 77.6249 128.1C75.9604 129.764 73.9844 131.085 71.8096 131.986C69.6348 132.886 67.3039 133.35 64.95 133.35H29.175C24.4979 133.349 20.0055 135.175 16.6566 138.44C13.3076 141.705 11.3674 146.149 11.25 150.825C11.25 155.579 13.1385 160.138 16.5001 163.5C19.8617 166.861 24.421 168.75 29.175 168.75H147.3" stroke="#B2C1C0" stroke-width="8" stroke-miterlimit="10"/>
+        </svg>            
+    </i>
+</div>
+<script src="{% static 'js/places-list_script.js' %}"></script>
+<div class="places__content">
+    <button class="show__filters">Показать фильтры</button>
+    <div class="places__filters">
+        <div class="filter__category">
+            <h3>Тип заведения</h3>
+            <ul>
+            <li><label><input type="checkbox" name="type"> Ресторан</label></li>
+            <li><label><input type="checkbox" name="type"> Парк</label></li>
+            <li><label><input type="checkbox" name="type"> Досуг</label></li>
+            </ul>
+        </div>
+        <div class="filter__category">
+            <h3>С кем сходить?</h3>
+            <ul>
+            <li><label><input type="checkbox" name="type"> Семья</label></li>
+            <li><label><input type="checkbox" name="type"> Друзья</label></li>
+            <li><label><input type="checkbox" name="type"> Пара</label></li>
+            </ul>
+        </div>
+        <div class="filter__category">
+            <h3>Время</h3>
+            <ul>
+            <li><label><input type="checkbox" name="type"> Утро</label></li>
+            <li><label><input type="checkbox" name="type"> День</label></li>
+            <li><label><input type="checkbox" name="type"> Вечер</label></li>
+            <li><label><input type="checkbox" name="type"> Ночь</label></li>
+            </ul>
+        </div>
+        <div class="filter__category">
+            <h3>Бюджет</h3>
+            <div class="budget__container">
+                <div class="slider__container">
+                    <input type="range" id="budget-min-slider" min="0" max="9999" step="1" value="0">
+                    <input type="range" id="budget-max-slider" min="0" max="9999" step="1" value="99999">
+                </div>
+                <div class="budget__inputs">
+                    <label>
+                        <input type="number" id="budget-min" min="0" max="99999" step="1" value="{{ budget_min }}">
+                    </label>
+                    <hr class="divider">
+                    <label>
+                        <input type="number" id="budget-max" min="0" max="99999" step="1" value="{{ budget_max }}">
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="places-list" class="routes-list">
+        {% for route in routes %}
+        <div class="route__card">
+            <div class="card__image">
+                <img src="{% static 'images/picture1.jpg' %}" alt="{{ route.route_name }}">
+            </div>
+            <div class="card__info">
+                <h3>{{ route.route_name }}</h3>
+                <p> {{ route.excerpt }} </p>
+                <p class="category">{{ route.relation_type|default:"Не указано" }}</p>
+                <p class="price">Средний чек: 
+                    {% if route.budget == 0 %}
+                    бесплатно
+                    {% else %}
+                    {{ route.budget|default:"Не указано"|floatformat:0 }}₽
+                    {% endif %}
+                </p>
+            </div>
+            <div class="card__button">
+                <button class="button__blue" onclick="window.location.href='{% url 'route_info' slug=route.slug %}'">Подробнее</button>
+            </div>
+        </div>
+        {% empty %}
+        <p>Маршрутов пока нет.</p>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock content %}

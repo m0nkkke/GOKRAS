@@ -1,0 +1,43 @@
+{% load static %}
+
+<div class="place__card">
+    <div class="placecard__image">
+        {% if place.card_photo_url %}
+            <img src="{{ place.card_photo_url }}" alt="{{ place.name }}">
+        {% else %}
+            <img src="{% static 'images/default.jpg' %}" alt="{{ place.name }}">
+        {% endif %}
+    </div>
+    <div class="placecard__info">
+        <div class="placecard__header">
+            <h3>{{ place.name }}</h3>
+            <div class="placecard__rating">
+                {% for _ in place.rating_stars %}
+                    <span class="star">★</span>
+                {% endfor %}
+                {% for _ in place.empty_stars %}
+                    <span class="star">☆</span>
+                {% endfor %}
+                <span>{{ place.rating|floatformat:1 }}/ 5</span>
+            </div>
+            
+        </div>
+        <div class="placecard__content">
+            <hr class="divider__card">
+            <p>{{ place.excerpt }}</p>
+            <hr class="divider__card">
+        </div>
+        <div class="placecard__footer">
+            <div class="placecard__subinfo">
+                <p class="placecard__category">{{ place.category.name }}</p>
+                <p class="placecard__avgprice">Средний чек: 
+                    {% if place.avgprice == 0 %}
+                    бесплатно
+                    {% else %}
+                    {{ place.avgprice|floatformat:0 }}₽</p>
+                    {% endif %}
+            </div>
+            <button onclick="window.location.href='{% url 'place_info' slug=place.slug %}'">Узнать подробнее</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_tags %}
+
+{% block content %}
+
+<script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
+<div class="place__title-info">
+    <div class="title-info">
+        <h1>
+            {{ place.name }}
+        </h1>
+        <div class="place__rating">
+            {% for _ in place.rating_stars %}
+            <span class="star">★</span>
+            {% endfor %}
+            {% for _ in place.empty_stars %}
+                <span class="star">☆</span>
+            {% endfor %}
+            <span>{{ place.rating|floatformat:1 }}/5</span>
+        </div>
+        <p class="place__description">
+            {{ place.description }}
+        </p>
+        {% comment %} <p class="place__top">
+            #2 из 1 179 ресторанов в Красноярск
+        </p> {% endcomment %}
+        {% if place.category.name == "Ресторан"  %}
+        <div class="place__category">
+            <p>
+                {{ place.cuisine.all|join:", " }}
+            </p>
+        </div>
+        {% endif %}
+        <div class="place__avgprice">
+            <p>Средний чек {{ place.avgprice|floatformat:0 }} ₽</p>
+        </div>
+        {% if user.is_authenticated %}
+        <form action="{% url 'add_to_favorites' place.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="button__gray">
+                Добавить в избранное
+            </button>
+        </form>
+        {% else %}
+        <button class="button__gray" onclick="window.location.href='{% url 'login' %}'">
+            Добавить в избранное
+        </button>
+        {% endif %}
+    </div>
+    <div class="place__background">
+        <img src="/media/images/{{place.slug}}_page.jpg" alt="background">
+    </div>
+</div>
+<div class="place__main-info">  
+    <div class="place__data">
+        <div class="place__geo">
+            <div id="map" class="place__map" data-lat="{{ place.latitude }}" data-lng="{{ place.longitude }}"></div>
+            <div class="place__contacts">
+                <div class="place__address">
+                    <i>
+                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 16.25C17.0711 16.25 18.75 14.5711 18.75 12.5C18.75 10.4289 17.0711 8.75 15 8.75C12.9289 8.75 11.25 10.4289 11.25 12.5C11.25 14.5711 12.9289 16.25 15 16.25Z" stroke="white" stroke-opacity="0.5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M15 27.5C20 22.5 25 18.0229 25 12.5C25 6.97715 20.5229 2.5 15 2.5C9.47715 2.5 5 6.97715 5 12.5C5 18.0229 10 22.5 15 27.5Z" stroke="white" stroke-opacity="0.5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>                        
+                    </i>
+                    <p>
+                        {{ place.address }}
+                    </p>
+                </div>
+                <div class="place__phone">
+                    <i>
+                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.5625 7.5C18.7835 7.73821 19.9055 8.33533 20.7851 9.21493C21.6647 10.0945 22.2619 11.2166 22.5 12.4375M17.5625 2.5C20.0991 2.7818 22.4645 3.91771 24.2704 5.72126C26.0761 7.5248 27.2151 9.88876 27.5 12.425M23.125 26.25C12.4245 26.25 3.75 17.5755 3.75 6.875C3.75 6.39222 3.76766 5.91357 3.80236 5.43966C3.84219 4.89577 3.8621 4.62384 4.00463 4.37629C4.12268 4.17126 4.33187 3.97683 4.54497 3.87406C4.80226 3.75 5.10235 3.75 5.70251 3.75H9.22415C9.72885 3.75 9.9812 3.75 10.1975 3.83306C10.3886 3.90644 10.5588 4.02561 10.693 4.18012C10.845 4.35504 10.9312 4.5922 11.1037 5.06651L12.5614 9.07506C12.762 9.62691 12.8624 9.90284 12.8454 10.1646C12.8304 10.3955 12.7515 10.6176 12.6178 10.8063C12.4661 11.0203 12.2143 11.1714 11.7108 11.4735L10 12.5C11.5024 15.8111 14.1876 18.4999 17.5 20L18.5265 18.2893C18.8286 17.7856 18.9796 17.5339 19.1936 17.3822C19.3824 17.2485 19.6045 17.1696 19.8354 17.1546C20.0971 17.1376 20.3731 17.238 20.925 17.4386L24.9335 18.8962C25.4078 19.0687 25.645 19.155 25.8199 19.307C25.9744 19.4412 26.0936 19.6114 26.1669 19.8025C26.25 20.0188 26.25 20.2711 26.25 20.7759V24.2975C26.25 24.8976 26.25 25.1978 26.1259 25.455C26.0231 25.6681 25.8288 25.8774 25.6238 25.9954C25.3761 26.1379 25.1043 26.1577 24.5604 26.1976C24.0864 26.2324 23.6078 26.25 23.125 26.25Z" stroke="white" stroke-opacity="0.5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>    
+                    </i>
+                    <p>
+                        {{ place.phone }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="place__more">
+            <div class="place__container">
+                <h2>
+                    Подробнее
+                </h2>
+                <div class="price__diff">
+                    <h3>
+                        Диапазон цен
+                    </h3>
+                    {% if place.additional_info.prices_diff %}
+                    {% for method in place.additional_info.prices_diff %}
+                        <p>{{ method }}</p>
+                    {% endfor %}
+                    {% else %}
+                        <p>Информация о ценах отсутствует.</p>
+                    {% endif %}
+                </div>
+                <div class="place__personal-info">
+                    {% if place.category.name == 'Ресторан'%}
+                    <h3>
+                        Тип кухни
+                    </h3>
+                    {% else %}
+                    <h3>
+                        Информация
+                    </h3>
+                    {% endif %}
+                    <p>{{ place.cuisine.all|join:", " }}</p>
+                    <hr class="place__divider">
+                    {% for method in place.additional_info.payment_methods %}
+                        <p>{{ method }}</p>
+                    {% endfor %}
+                    {% if current_category == 'Ресторан' %}
+                        {% if place.is_child_friendly %}
+                        <p>Можно с детьми</p>
+                        {% else %}
+                        <p>Только для взрослых</p>
+                        {%endif%}
+                    {% else %}
+                        {% for method in place.additional_info.has_cafe %}
+                            <p>{{ method }}</p>
+                        {% endfor %}
+                    {% endif %}
+                    {% for method in place.additional_info.special_features %}
+                    <p>{{ method }}</p>
+                    {% endfor %}
+                    {% for method in place.additional_info.amenities %}
+                    <p>{{ method }}</p>
+                    {% endfor %}
+                    <div class="place__worktime">
+                        <i>
+                            <svg width="25" height="25" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 26.25C21.2133 26.25 26.25 21.2133 26.25 15C26.25 8.7868 21.2133 3.75 15 3.75C8.7868 3.75 3.75 8.7868 3.75 15C3.75 21.2133 8.7868 26.25 15 26.25Z" stroke="white" stroke-opacity="0.5" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M15 7.5V15" stroke="white" stroke-opacity="0.5" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M20.3 20.3L15 15" stroke="white" stroke-opacity="0.5" stroke-width="1.875" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>    
+                        </i>
+                        <span>
+                           {{ place.visit_time }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="place__images">
+        {% for i in "1234" %}
+        {% with place.slug|stringformat:"s" as slug %}
+            {% with "/media/images/"|add:slug|add:"_img"|add:i|stringformat:"s"|add:".jpg" as image_url %}
+            {% if image_url|file_exists %}
+                <div class="place__image">
+                    <img src="{{ image_url }}" alt="Фото {{ i }}" class="clickable-image">
+                </div>
+            {% else %}
+                <div class="place__image">
+                    <img src="/media/images/default.jpg" alt="Фото по умолчанию" class="clickable-image">
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% endwith %}
+        {% endfor %}
+    </div>
+    
+    <!-- Если это ресторан: -->
+    {% if place.category == current_category%}
+        <div class="restaurant__menu">
+            <div class="menu__banner">
+                <h3>Здесь вы можете ознакомиться с меню</h3>
+                <button class="button__gray">Меню ресторана</button>
+            </div>
+        </div>
+    {% endif %}
+</div>
+<div class="reviews">
+    <hr class="review__divider">
+    <div class="reviews__title">
+        <h3>
+            Отзывы
+        </h3>
+        {% if request.user.is_authenticated %}
+        <form id="reviewForm" method="post" action="{% url 'place_info' place.slug %}">
+            {% csrf_token %}
+            <div class="review__area">
+                <div class="review__rating">
+                    <label class="rating__label" for="rating">Оценка:</label>
+                    <select class="rating" name="rating" id="rating" required>
+                        <option value="5">5 - отлично</option>
+                        <option value="4">4 - хорошо</option>
+                        <option value="3">3 - средне</option>
+                        <option value="2">2 - плохо</option>
+                        <option value="1">1 - ужасно</option>
+                    </select>
+                </div>
+                <div class="review__input">
+                    <textarea max class="review__textarea" name="comment" placeholder="Написать отзыв..." required></textarea>
+                </div>
+                <button type="submit" class="review__submit">Отправить отзыв</button>
+            </div>    
+        </form>
+        {% else %}
+        <div class="empty__field">
+            <p>Чтобы оставить отзыв, нужно авторизоваться на сайте.</p>
+            <a href="{% url 'login' %}" class="button__gray">Войти</a>
+        </div>
+        {% endif %}
+    </div>
+    <hr class="review__divider">
+    <ul class="reviews__list">
+        {% for review in reviews %}
+            <li class="review__card">
+                <div class="review__card-title">
+                    <div class="review__card-image">
+                        {% if review.user.photo %}
+                            <img src="{{ review.user.photo.url }}" alt="Фото пользователя">
+                        {% else %}
+                            {% if review.user.gender == 'M' %}
+                                <img src="{% static 'images/default_man.png' %}" alt="Фото по умолчанию (мужской)">                        
+                            {% else %}
+                                <img src="{% static 'images/default_woman.png' %}" alt="Фото по умолчанию (женский)">
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="review__user-info">
+                        <div class="review__username">
+                            <strong>{{ review.user.username }}</strong>
+                        </div>
+                        <div class="review__rating">
+                            {% for i in "12345" %}
+                            {% if i|add:0 <= review.rating %}
+                                <span class="star full">★</span>
+                            {% else %}
+                                <span class="star empty">☆</span>
+                            {% endif %}
+                        {% endfor %}
+                        <span>{{ review.rating }}/5</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="review__content">
+                    <p class="review__text" id="reviewText"> {{ review.comment }} </p>
+                </div>
+                <div class="review__subinfo">
+                    <button id="toggleButton" class="button__more">
+                        Подробнее 
+                        <i>
+                            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11 1.5L6 6.5L1 1.5" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>                                                
+                        </i>
+                    </button>
+                    <small class="review__date">
+                        {{ review.created_at|date:"d M Y" }}
+                    </small>
+                    
+                </div>
+            </li>
+        {% empty %}
+        <div class="empty__field">
+            <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path opacity="0.5" d="M30 55C43.807 55 55 43.807 55 30C55 16.1929 43.807 5 30 5C16.1929 5 5 16.1929 5 30C5 43.807 16.1929 55 30 55Z" fill="#1C274C"/>
+                <path d="M20.9938 43.6165C21.6104 44.4485 22.7847 44.623 23.6166 44.0063C25.4376 42.6568 27.6354 41.875 30.0001 41.875C32.3649 41.875 34.5626 42.6568 36.3836 44.0063C37.2156 44.623 38.3899 44.4485 39.0064 43.6165C39.6231 42.7845 39.4486 41.6102 38.6166 40.9937C36.1856 39.1917 33.2126 38.125 30.0001 38.125C26.7876 38.125 23.8146 39.1917 21.3836 40.9937C20.5517 41.6102 20.3772 42.7845 20.9938 43.6165Z" fill="#1C274C"/>
+                <path d="M37.5 30C38.8807 30 40 28.321 40 26.25C40 24.1789 38.8807 22.5 37.5 22.5C36.1193 22.5 35 24.1789 35 26.25C35 28.321 36.1193 30 37.5 30Z" fill="#1C274C"/>
+                <path d="M22.5 30C23.8807 30 25 28.321 25 26.25C25 24.1789 23.8807 22.5 22.5 22.5C21.1193 22.5 20 24.1789 20 26.25C20 28.321 21.1193 30 22.5 30Z" fill="#1C274C"/>
+            </svg>  
+            <p class="empty__reviews">Отзывов пока нет. Может, Вы оставите первый отзыв?</p>
+        </div>
+        {% endfor %}
+    </ul>
+</div>
+
+<div id="modal" class="modal">
+    <span id="close-modal" class="close">&times;</span>
+    <img id="modal-img" class="modal-content" src="" alt="">
+</div>
+
+<script src="{% static 'js/place_view.js' %}"></script>
+{% endblock content %}

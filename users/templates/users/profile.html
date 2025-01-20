@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<script src="{% static 'js/switch_modes.js' %}"></script>
+
+<div class="profile__container">
+    <div class="profile__sidebar">
+        <h2>Личный кабинет</h2>
+        <ul>
+            <li><a href="#" id="profile-link" class="nav-link">Профиль</a></li>
+            <li><a href="#" id="favourites-link" class="nav-link">Избранные места</a></li>
+        </ul>
+    </div>
+    
+    {% comment %} <div class="profile__info">
+        <div class="profileform__container">
+            {% if user.photo %}
+                <img src="{{ user.photo.url }}" alt="Фото профиля" class="profile-photo">
+            {% else %}
+                <img src="{% static 'images/default.jpg' %}" alt="Фото профиля" class="profile-photo">
+            {% endif %}
+            <form method="post" enctype="multipart/form-data" action="{% url 'profile' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="photo">Выберите новое фото:</label>
+                    {{ photo_form.photo }}
+                </div>
+                <button type="submit" class="btn btn-primary">Изменить фото</button>
+            </form>
+            
+            <div class="profile__group">
+                <label for="last-name">Имя</label>
+                <p>{{ user.username }}</p>
+            </div>
+
+            <div class="profile__group">
+                <label for="phone">Телефон</label>
+                <p>{{ user.phone }}</p> 
+            </div>
+
+            <div class="profile__group">
+                <label for="email">E-mail</label>
+                <p>{{ user.email }}</p>
+            </div>
+            <div class="profile__group">
+                <label for="gender">Пол</label>
+                <p>{{ user.gender }}</p>
+            </div>
+        </div>
+    </div> {% endcomment %}
+
+    <div class="profile__info">
+        <div class="profile__picture">
+            {% if user.photo %}
+                <img src="{{ user.photo.url }}" alt="Фото профиля" class="profile-photo">
+            {% else %}
+                <img src="{% static 'images/default.jpg' %}" alt="Фото профиля" class="profile-photo">
+            {% endif %}
+        </div>
+    
+        <div class="profileform__container">
+
+            <!-- Информация о пользователе -->
+            <div class="profile__group">
+                <label for="first-name">Имя</label>
+                <p>{{ user.username }}</p>
+            </div>
+    
+            <div class="profile__group">
+                <label for="phone">Телефон</label>
+                <p>{{ user.phone }}</p>
+            </div>
+    
+            <div class="profile__group">
+                <label for="email">E-mail</label>
+                <p>{{ user.email }}</p>
+            </div>
+    
+            <div class="profile__group">
+                <label for="gender">Пол</label>
+                <p>{{ user.gender }}</p>
+            </div>
+
+            <!-- Форма для загрузки нового фото -->
+            <form method="post" enctype="multipart/form-data" action="{% url 'profile' %}">
+                {% csrf_token %}
+                    <label for="photo" class="file-upload-label">Выбрать фото</label>
+                    <input type="file" id="photo" name="photo" class="file-upload-button" />
+                <button type="submit" class="btn lightgrayprofile__button">Применить фото</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="favourite__places hidden">
+        <div class="favouriteplace__info">
+            <div class="places__grid">
+                {% for favorite in favorite_places %}
+                    <div class="favourite__card">
+                        <div class="cardplaces__details">
+                            <div class="cardplaces__photo">
+                                <img src="{{ favorite.place.card_photo_url }}" alt="{{ favorite.place.name }}">
+                            </div>
+                            <div class="cardplaces__info">
+                                <h3>{{ favorite.place.name }}</h3>
+                                <p>{{ favorite.place.category.name }}</p>
+                                <p>Средний чек {{ favorite.place.avgprice|floatformat:0 }} Р</p>
+                            </div>
+                        </div>
+                        <div class="cardplaces__button">
+                            <button class="darkgray__button" onclick="window.location.href='{% url 'place_info' slug=favorite.place.slug %}'">Подробнее</button>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p style="color:white">У вас нет избранных мест.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+ <!--<div class="profile__group">
+    <form method="post" enctype="multipart/form-data" action="{% url 'profile' %}">
+        {% csrf_token %}
+        <div class="profile__group">
+            {% comment %} <label for="photo">Выберите новое фото:</label>
+            {{ photo_form.photo }} {% endcomment %}
+            <label for="photo" class="file-upload-label">Выберите новое фото:</label>
+            <input type="file" id="photo" name="photo" class="file-upload-button" />
+        </div>
+        <button type="submit" class="btn lightgrayprofile__button">Изменить фото</button>
+    </form>
+</div>-->

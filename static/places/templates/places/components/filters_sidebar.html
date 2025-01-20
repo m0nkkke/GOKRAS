@@ -1,0 +1,149 @@
+<form method="get" id="filters-form">
+    <div class="filter__category">
+        <h3>Тип заведения</h3>
+        <ul>
+            {% for type in type_establishments %}
+                {% if type.category == current_category %}
+                <li class="{% if forloop.counter > 4 %}hidden{% endif %}"><label><input type="checkbox" name="type" value="{{ type.slug }}"> {{ type.name }}</label></li>
+                {% endif %}
+            {% endfor %}
+            <a class="show-more">Показать больше</a>
+        </ul>
+    </div>
+    
+    {% if current_category.name == "Ресторан" %}
+    <div class="filter__category">
+        <h3>Кухня</h3>
+        <ul>
+            {% for cuisine in types_cuisine %}
+                {% if cuisine.category == current_category %}
+                <li class="{% if forloop.counter > 4 %}hidden{% endif %}"><label><input type="checkbox" name="cuisine" value="{{ cuisine.slug }}"> {{ cuisine.name }}</label></li>
+                {% endif %}
+            {% endfor %}
+            <a class="show-more">Показать больше</a>
+        </ul>
+    </div>
+    {% endif %}
+    
+    
+    <div class="filter__category">
+        <h3>Время приема</h3>
+        <ul>
+            {% for time in visiting_times %}
+                {% if time.category == current_category %}
+                <li class="{% if forloop.counter > 4 %}hidden{% endif %}"><label><input type="checkbox" name="time" value="{{ time.slug }}"> {{ time.name }}</label></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <div class="filter__category">
+        <h3>Бюджет</h3>
+        <div class="budget__container">
+            <div class="slider__container">
+                <input type="range" id="budget-min-slider" min="0" max="9999" step="1" value="0">
+                <input type="range" id="budget-max-slider" min="0" max="9999" step="1" value="99999">
+            </div>
+            <div class="budget__inputs">
+                <label>
+                    <input type="number" id="budget-min" min="0" max="99999" step="1" value="{{ budget_min }}">
+                </label>
+                <hr class="divider">
+                <label>
+                    <input type="number" id="budget-max" min="0" max="99999" step="1" value="{{ budget_max }}">
+                </label>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script>
+    // Обновление URL с фильтрами
+    function updateURL() {
+        const form = document.getElementById('filters-form');
+        const formData = new FormData(form);
+        let currentParams = new URLSearchParams(window.location.search);
+    
+        formData.forEach((value, key) => {
+            console.log(value, key)
+            if (Array.isArray(value)) {
+                value.forEach(val => {
+                    currentParams.append(key, val);
+                });
+            } else {
+                currentParams.set(key, value);
+            }
+        });
+    
+        const newUrl = '?' + currentParams.toString();
+        window.history.replaceState({}, '', newUrl);
+    }
+    
+    // Асинхронное обновление фильтров
+    document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('filters-form');
+
+    function applyFilters() {
+        const formData = new FormData(form);
+        const queryParams = new URLSearchParams(formData).toString();
+        const newUrl = '?' + queryParams;
+        window.history.replaceState({}, '', newUrl);
+
+        // Выполняем запрос с учетом текущего пути
+        fetch(window.location.pathname + '?' + queryParams, {
+            method: 'GET',
+        })
+        .then(response => response.text())
+        .then(html => {
+            const newPlaces = new DOMParser().parseFromString(html, 'text/html')
+                .querySelector('#places-list');
+            if (newPlaces) {
+                document.getElementById('places-list').innerHTML = newPlaces.innerHTML;
+            }
+        })
+        .catch(error => console.error('Ошибка:', error));
+    }
+
+    form.querySelectorAll('input').forEach(input => {
+        input.addEventListener('change', applyFilters);
+    });
+
+    const minSlider = document.getElementById('budget-min-slider');
+    const maxSlider = document.getElementById('budget-max-slider');
+    const minInput = document.getElementById('budget-min');
+    const maxInput = document.getElementById('budget-max');
+
+    const updateMin = (value) => {
+        const maxValue = parseInt(maxSlider.value);
+        if (value > maxValue) value = maxValue;
+        minSlider.value = value;
+        minInput.value = value;
+    };
+
+    const updateMax = (value) => {
+        const minValue = parseInt(minSlider.value);
+        if (value < minValue) value = minValue;
+        maxSlider.value = value;
+        maxInput.value = value;
+    };
+
+    minSlider.addEventListener('input', (e) => updateMin(e.target.value));
+    maxSlider.addEventListener('input', (e) => updateMax(e.target.value));
+
+    // Используем debounce для предотвращения частого обновления
+    let debounceTimeout;
+    const debounce = (func, delay = 300) => {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(func, delay);
+    };
+
+    minInput.addEventListener('input', (e) => {
+        debounce(() => updateMin(e.target.value));
+    });
+
+    maxInput.addEventListener('input', (e) => {
+        debounce(() => updateMax(e.target.value));
+    });
+});
+</script>

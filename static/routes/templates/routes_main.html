@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<script src="{% static 'js/select_script.js' %}"></script>
+<script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
+<script src="{% static 'js/get_map_script.js' %}"></script>
+<div class="route__welcome">
+    <div class="route__title__welcome">
+        <h1>
+            Куда сходить <br>в Красноярске?
+        </h1>
+    </div>
+    <div class="route__create">
+        <div class="creation__menu">
+            <h2>Маршрут</h2>
+            <div class="people__selector">
+              <select name="people" id="people">
+                <option value="">Количество людей</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3 +</option>
+              </select>
+            </div>
+            <div class="relationship__selector">
+              <select name="relationship" id="relationship">
+                <option value="">Взаимоотношения</option>
+                <option value="friends">Друзья</option>
+                <option value="family">Семья</option>
+                <option value="couple">Пара</option>
+              </select>
+            </div>
+            <div class="preferences__selector">
+              <select name="preferences" id="preferences">
+                <option value="">Предпочтения</option>
+                <option value="nature">Природа</option>
+                <option value="culture">Культура</option>
+                <option value="relax">Отдых</option>
+              </select>
+            </div>
+            <div class="time__selector">
+              <select name="route__time" id="route__time">
+                <option value="">Время</option>
+                <option value="morning">Утро</option>
+                <option value="day">День</option>
+                <option value="evening">Вечер</option>
+                <option value="night">Ночь</option>
+              </select>
+            </div>
+            <div class="budget__selector">
+              <select name="route__budget" id="route__budget">
+                <option value="">Бюджет</option>
+                <option value="budget__1">0-500</option>
+                <option value="budget__2">500-1500</option>
+                <option value="budget__3">1500-3000</option>
+                <option value="budget__4">3000 +</option>
+              </select>
+            </div>
+            <!-- <div class="budget__selector">
+              <input type="text" placeholder="Бюджет" id="budget" oninput="toggleClearIcon(this)">
+              <i>
+                <svg width="34" height="28" viewBox="0 0 34 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20.5199 17.3333H25.5199M20.5199 10.6666H25.5199M12.1865 9.83331V8.16665M12.1865 9.83331H15.52M12.1865 9.83331C9.18846 9.83325 8.85627 10.5537 8.85336 12.0541C8.85042 13.5546 8.85334 14 12.1867 14C15.52 14 15.52 14.3425 15.52 15.9445C15.52 17.1483 15.52 18.1666 12.1867 18.1666M12.1867 18.1666L12.1865 19.8333M12.1867 18.1666H8.85336M7.51986 25.6666H26.8532C28.72 25.6666 29.6535 25.6666 30.3665 25.3033C30.9937 24.9838 31.5037 24.4738 31.8232 23.8466C32.1865 23.1336 32.1865 22.2001 32.1865 20.3333V7.66665C32.1865 5.79981 32.1865 4.86638 31.8232 4.15335C31.5037 3.52613 30.9937 3.0162 30.3665 2.69663C29.6535 2.33331 28.72 2.33331 26.8532 2.33331H7.51986C5.65302 2.33331 4.71959 2.33331 4.00656 2.69663C3.37934 3.0162 2.86941 3.52613 2.54984 4.15335C2.18652 4.86638 2.18652 5.7998 2.18652 7.66665V20.3333C2.18652 22.2001 2.18652 23.1336 2.54984 23.8466C2.86941 24.4738 3.37934 24.9838 4.00656 25.3033C4.71959 25.6666 5.65301 25.6666 7.51986 25.6666Z" stroke="#2B3239" stroke-opacity="0.5" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </i>
+            </div> -->
+            <div class="is-children__selector">
+              <label for="checkbox" class="checkbox-label">
+                <input type="checkbox" id="checkbox" class="checkbox">
+                <span class="checkbox-view">
+                  <svg class="checkbox-icon" xmlns="http://www.w3.org/2000/svg" width="18" viewBox="0 0 511.985 511.985">
+                      <path fill="#fff" d="M500.088 83.681c-15.841-15.862-41.564-15.852-57.426 0L184.205 342.148 69.332 227.276c-15.862-15.862-41.574-15.862-57.436 0-15.862 15.862-15.862 41.574 0 57.436l143.585 143.585c7.926 7.926 18.319 11.899 28.713 11.899 10.394 0 20.797-3.963 28.723-11.899l287.171-287.181c15.862-15.851 15.862-41.574 0-57.435z"/>
+                  </svg>
+                </span>
+                С Вами будут дети?
+              </label>
+            <button class="button__gray" onclick="window.location.href='{% url 'routes_list' %}'">Найти</button>
+          </div>
+        </div>
+    </div>
+    <div class="route__background">
+      <img src="{% static 'images/background.png' %}" alt="background">
+    </div>
+</div>
+<div class="route__choice">
+  <div class="choice__title">
+    <h1>
+      Выберите подходящий для Вас маршрут
+    </h1>
+  </div>
+  <div class="routes__list">
+    <div class="route__card">
+      <div class="card__image">
+        <img src="{% static 'images/picture1.png' %}" alt="">
+      </div>
+      <div class="card__info">
+        <h3>Русская кухня</h3>
+        <p>Окунитесь в мир Русской кухни! На маршруте вы сможете выбрать одни из самых популярных заведений или посетить все сразу</p>
+        <p class="category">Рестораны / Бары</p>
+        <p class="price">Средний чек: 2000₽</p>
+      </div>
+      <div class="card__button">
+        <button class="button__blue" onclick="window.location.href='{% url 'route_info' slug='russkaya-kuhnya' %}'">Подробнее</button>
+      </div>
+    </div>
+    <div class="route__card">
+      <div class="card__image">
+        <img src="{% static 'images/place2.jpg' %}" alt="">
+      </div>
+      <div class="card__info">
+        <h3>Прогулка</h3>
+        <p>Желаете прогуляться по свежему воздуху, а может отдохнуть на природе? Но привычные тропинки уже надоели или вовсе не знаете где? Этот маршрут для Вас</p>
+        <p class="category">Природа</p>
+        <p class="price">Средний чек: бесплатно</p>
+      </div>
+      <div class="card__button">
+        <button class="button__blue" onclick="window.location.href='{% url 'route_info' slug='progulka' %}'">Подробнее</button>
+      </div>
+    </div>    <div class="route__card">
+      <div class="card__image">
+        <img src="{% static 'images/place3.jpg' %}" alt="">
+      </div>
+      <div class="card__info">
+        <h3>Интересное</h3>
+        <p>Этот маршрут подойдет для любителей истории и тех, кто хочет заглянуть в неизведанные места. Взгляните на город по-новому!</p>
+        <p class="category">Рестораны / Бары</p>
+        <p class="price">Средний чек: 2000₽</p>
+      </div>
+      <div class="card__button">
+        <button class="button__blue" onclick="window.location.href='{% url 'route_info' slug='interesnoe' %}'">Подробнее</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="route__view">
+  <div class="route__container">
+    <div class="route__info">
+      <div class="info__title">
+        <h1>Пример маршрута</h1>
+      </div>
+      <div class="place__title">
+        <h3>Русская кухня</h3>
+      </div>
+      <div class="place__info">
+        <p>
+          Маршрут по ресторанам русской кухни — шанс познакомиться с традиционными блюдами и атмосферой гостеприимства.
+
+          Начнём с ресторана, где подают борщ с пампушками, пельмени и пироги — вкус настоящей России.
+          
+          Далее посетим заведение с региональными деликатесами: стерлядь, сибирские позы и уральские супы.
+          
+          Завершим гастрономический путь десертами: тульские пряники, варенье и чай из самовара с мёдом.</p>
+        <p>Этот маршрут откроет для вас многогранность русской кухни, её разнообразие и богатую историю. Убедитесь, что это путешествие станет настоящим праздником для вашего вкуса!</p>
+      </div>
+      <div class="place__subinfo">
+        <p class="beginning">Ресторан Булгаков</p>
+        <p class="address">📍ул. Сурикова, 12/6</p>
+        <p class="worktime">
+          🕒Вс-Чт 12:00-24:00<br>
+          Пт, Сб 12:00-01:00
+          </p>
+        <p class="average__price">💸Средний чек 1500₽</p>
+        <button class="button__gray" onclick="window.location.href='{% url 'route_info' slug='russkaya-kuhnya' %}'">Подробнее</button>
+      </div>
+    </div>
+    <div class="gis__map" id="map"></div>
+  </div>
+</div>
+{% endblock %}
